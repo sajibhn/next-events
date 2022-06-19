@@ -1,31 +1,40 @@
-import React from 'react'
-import { useRouter } from 'next/router'
-import { getEventById } from '../../dummy-data'
-import EventSummary from '../../components/event-detail/event-detail/event-summary'
-import EventLogistics from '../../components/event-detail/event-detail/event-logistics'
-import EventContent from '../../components/event-detail/event-detail/event-content'
+import { Fragment } from 'react';
+import { useRouter } from 'next/router';
 
-const EventDetailsPage = () => {
-    const router = useRouter()
-    const eventId = router.query.eventId;
-    const event = getEventById(eventId)
-    if (!event) {
-        return <p>No event found!</p>
-    }
+import { getEventById } from '../../dummy-data';
+import EventSummary from '../../components/event-detail/event-summary';
+import EventLogistics from '../../components/event-detail/event-logistics';
+import EventContent from '../../components/event-detail/event-content';
+import ErrorAlert from '../../components/ui/error-alert';
+
+function EventDetailPage() {
+  const router = useRouter();
+
+  const eventId = router.query.eventId;
+  const event = getEventById(eventId);
+
+  if (!event) {
     return (
-        <>
-            <EventSummary title={event.title} />
-            <EventLogistics
-                date={event.date}
-                address={event.location}
-                image={event.image}
-                imageAlt={event.title} />
+      <ErrorAlert>
+        <p>No event found!</p>
+      </ErrorAlert>
+    );
+  }
 
-            <EventContent>
-                <p>{event.description}</p>
-            </EventContent>
-        </>
-    )
+  return (
+    <Fragment>
+      <EventSummary title={event.title} />
+      <EventLogistics
+        date={event.date}
+        address={event.location}
+        image={event.image}
+        imageAlt={event.title}
+      />
+      <EventContent>
+        <p>{event.description}</p>
+      </EventContent>
+    </Fragment>
+  );
 }
 
-export default EventDetailsPage
+export default EventDetailPage;
